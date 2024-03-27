@@ -3,25 +3,42 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 1321",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 1321",
+    "lint": "next lint",
+    "docker-compose": "docker-compose -f misc/docker/docker-compose.yml",
+    "typeorm": "cross-env DOTENV_CONFIG_PATH=./.env node -r tsconfig-paths/register -r ts-node/register -r dotenv/config ./node_modules/typeorm/cli",
+    "typeorm:create": "npm run typeorm migration:create",
+    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/infrastructure/database/provider/index.ts ./src/infrastructure/database/provider/migrations/$NAME",
+    "typeorm:run": "npm run typeorm migration:run -- -d ./src/infrastructure/database/provider/index.ts",
+    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/infrastructure/database/provider/index.ts",
+    "typeorm:show": "npm run typeorm migration:show -- -d ./src/infrastructure/database/provider/index.ts"
   },
   "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "mysql": "^2.18.1",
+    "next": "14.1.4",
+    "next-api-decorators": "^2.0.2",
+    "path-to-regexp": "^6.2.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.1.4"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@babel/core": "^7.24.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.4"
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
   }
 }
