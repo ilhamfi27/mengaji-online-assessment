@@ -1,11 +1,15 @@
+const stringUrl = process.env.DB_STRING_URL;
+const urlObject = new URL(stringUrl as string);
+
 export const config = {
   db: {
-    type: process.env.DB_TYPE ?? 'mysql',
-    host: process.env.DB_HOST ?? 'localhost',
-    port: process.env.DB_PORT ?? 3306,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    name: process.env.DB_NAME,
+    type: 'postgres',
+    host: urlObject.hostname,
+    port: parseInt(urlObject.port),
+    username: urlObject.username,
+    password: urlObject.password,
+    database: urlObject.pathname.slice(1),
+    schema: 'public',
     maxPoolConnection: process.env.DB_MAX_POOL_CONNECTION ?? 10,
   },
 };

@@ -3,30 +3,16 @@ services:
   ########################
   # SERVICE DEPENDENCIES #
   ########################
-  mariadb:
-    image: mariadb:10.3.10
-    restart: unless-stopped
+  postgresql:
+    image: postgres:15.1-alpine
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=mengajionline
-      - MYSQL_USER=mengajionline
-      - MYSQL_PASSWORD=mengajionline
-    healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '--silent']
-      start_period: 30s
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     ports:
-      - 31306:3306
-    networks:
-      default:
-    volumes:
-      - ./volumes/mariadb:/var/lib/mysql
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: unless-stopped
-    environment:
-      - PMA_HOST=mariadb
-      - UPLOAD_LIMIT=10000000000
-    ports:
-      - 31080:80
+      - '35432:5432'
+    volumes: 
+      - ./volumes/postgresql:/var/lib/postgresql/data
 networks:
   default:

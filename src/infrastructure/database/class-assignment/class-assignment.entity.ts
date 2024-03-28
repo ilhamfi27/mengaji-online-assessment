@@ -8,7 +8,7 @@ export class ClassAssignmentEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp with time zone' })
   dateAndTime!: string;
 
   @Column({ type: 'integer' })
