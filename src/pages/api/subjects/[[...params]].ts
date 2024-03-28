@@ -6,15 +6,28 @@ import {
   Get,
   HttpCode,
   Param,
+  Post,
   Put,
 } from 'next-api-decorators';
-import { UpdateSubjectRequest } from './request';
+import { CreateSubjectRequest, UpdateSubjectRequest } from './request';
 
-class DetailSubjectHandler {
+class SubjectHandler {
   @Get('/:id')
   @HttpCode(200)
   show(@Param('id') id: string) {
     return SubjectService.getService().getSubjectById(id);
+  }
+
+  @Get()
+  @HttpCode(201)
+  index() {
+    return SubjectService.getService().getSubjects();
+  }
+
+  @Post()
+  @HttpCode(200)
+  create(@Body() body: CreateSubjectRequest) {
+    return SubjectService.getService().createSubject(body);
   }
 
   @Put('/:id')
@@ -30,4 +43,4 @@ class DetailSubjectHandler {
   }
 }
 
-export default createHandler(DetailSubjectHandler);
+export default createHandler(SubjectHandler);

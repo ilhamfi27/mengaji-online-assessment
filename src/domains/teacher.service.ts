@@ -19,6 +19,7 @@ export class TeacherService {
     if (params.search) {
       where = [
         { name: ILike(`%${params.search}%`) },
+        { email: ILike(`%${params.search}%`) },
         { employeeId: params.search },
       ]
     }

@@ -1,6 +1,6 @@
 import { IsDateString, IsNumber, IsString } from 'class-validator';
 import { CreateTeacherRequest } from '../teachers/request';
-import { CreateSubjectRequest } from '../subject/request';
+import { CreateSubjectRequest } from '../subjects/request';
 import { Type } from 'class-transformer';
 
 export class CreateActiveClassRequest {

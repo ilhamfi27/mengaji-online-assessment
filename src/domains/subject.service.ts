@@ -2,7 +2,7 @@ import { SubjectRepository } from '../infrastructure/database/subject/subject.re
 import {
   CreateSubjectRequest,
   UpdateSubjectRequest,
-} from '../pages/api/subject/request';
+} from '../pages/api/subjects/request';
 
 export class SubjectService {
   public static readonly service: SubjectService = new SubjectService();

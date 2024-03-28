@@ -31,3 +31,7 @@ export const createTeacher = async (data: Teacher) => {
 export const updateTeacher = async (id: string, data: Teacher) => {
   return request.put(`/teachers/${id}`, data);
 };
+
+export const deleteTeacher = async (id: string) => {
+  return request.delete(`/teachers/${id}`);
+};

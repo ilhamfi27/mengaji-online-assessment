@@ -11,47 +11,45 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import ProductForm from './TeacherForm';
+import SubjectForm from './SubjectForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
-import { useTeacher } from '@/src/hooks/useTeacher';
-import { Teacher } from '@/src/services/teacher';
+import { useSubject } from '@/src/hooks/useSubject';
+import { Subject } from '@/src/services/subject';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
 
-const TeacherList = () => {
+const SubjectList = () => {
   const {
-    teachers,
-    refreshTeachers,
+    subjects,
+    refreshSubjects,
     isLoading,
-    teacher,
-    setTeacher,
+    subject,
+    setSubject,
+    deleteSubject,
     filter,
     setFilter,
-    deleteTeacher,
-  } = useTeacher();
-  const { showSnackbar } = useSnackbar();
+  } = useSubject();
   const [modalOpen, setModalOpen] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
-    refreshTeachers();
+    refreshSubjects();
   }, []);
 
   const handleButtonAction = (param: any) => {
     setModalOpen(true);
-    setTeacher(param.row);
+    setSubject(param.row);
   };
 
-  const handleOk = (p: Teacher) => {
-    deleteTeacher(p.id as string).then(() => {
-      refreshTeachers();
-      showSnackbar('Teacher archived!', 'success');
+  const handleOk = (p: Subject) => {
+    deleteSubject(p.id as string).then(() => {
+      refreshSubjects();
+      showSnackbar('Subject archived!', 'success');
     });
   };
 
   const columns: GridColDef<any>[] = [
-    { field: 'employeeId', headerName: 'Employee ID', width: 150 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'email', headerName: 'Email', width: 300 },
+    { field: 'name', headerName: 'Name', width: 400 },
     {
       field: 'id',
       headerName: 'Action',
@@ -89,19 +87,19 @@ const TeacherList = () => {
           variant="contained"
           onClick={() => {
             setModalOpen(true);
-            setTeacher(null);
+            setSubject(null);
           }}
         >
           <Add />
-          Add Teacher
+          Add Subject
         </Button>
       </div>
       <Box
         sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
       >
         <DataGrid
-          rows={teachers?.items ?? []}
-          rowCount={teachers?.totalSize ?? 0}
+          rows={subjects?.items ?? []}
+          rowCount={subjects?.totalSize ?? 0}
           columns={columns}
           loading={isLoading}
           initialState={{
@@ -153,10 +151,10 @@ const TeacherList = () => {
           handleOk={() => {
             setModalOpen(false);
             setWillDelete(false);
-            handleOk(teacher as Teacher);
+            handleOk(subject as Subject);
           }}
-          title="Archive Teacher"
-          message={`Are you sure you want to archive ${teacher?.name} with employee ID ${teacher?.employeeId}?`}
+          title="Archive Subject"
+          message={`Are you sure you want to archive ${subject?.name}?`}
         />
       ) : (
         <SimpleDialog
@@ -164,11 +162,11 @@ const TeacherList = () => {
           handleClose={() => {
             setModalOpen(false);
           }}
-          title={`${teacher ? 'Edit' : 'Add'} Teacher`}
+          title={`${subject ? 'Edit' : 'Add'} Subject`}
           maxWidth="md"
         >
-          <ProductForm
-            data={teacher as Teacher}
+          <SubjectForm
+            data={subject as Subject}
             onSubmitSuccess={() => {
               setModalOpen(false);
             }}
@@ -179,4 +177,4 @@ const TeacherList = () => {
   );
 };
 
-export default TeacherList;
+export default SubjectList;

@@ -1,19 +1,19 @@
 import useSWR from 'swr';
 import {
-  getTeachers,
-  createTeacher,
-  updateTeacher,
-  deleteTeacher,
-  Teacher,
-} from '../services/teacher';
+  getSubjects,
+  createSubject,
+  updateSubject,
+  deleteSubject,
+  Subject,
+} from '../services/subject';
 import { useEffect, useState } from 'react';
 import { PaginationParam } from '../@types/pagination';
 
-export const useTeacher = () => {
+export const useSubject = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState();
-  const [data, setData] = useState<Teacher | null>(null);
+  const [data, setData] = useState<Subject | null>(null);
   const [filter, setFilter] = useState<PaginationParam<string>>({
     page: 1,
     size: 10,
@@ -21,12 +21,12 @@ export const useTeacher = () => {
   });
 
   const {
-    data: teachers,
+    data: subjects,
     error: fetchError,
     isLoading: fetchLoading,
-    mutate: refreshTeachers,
+    mutate: refreshSubjects,
     isValidating,
-  } = useSWR(['/teachers', filter], () => getTeachers(filter));
+  } = useSWR(['/subjects', filter], () => getSubjects(filter));
 
   useEffect(() => {
     setIsLoading(fetchLoading);
@@ -35,16 +35,16 @@ export const useTeacher = () => {
   }, [fetchError, fetchLoading, isValidating]);
 
   return {
-    teachers,
+    subjects,
     error,
     isLoading,
     isFetching,
-    refreshTeachers,
-    createTeacher,
-    updateTeacher,
-    deleteTeacher,
-    teacher: data,
-    setTeacher: setData,
+    refreshSubjects,
+    createSubject,
+    updateSubject,
+    deleteSubject,
+    subject: data,
+    setSubject: setData,
     filter,
     setFilter,
   };
