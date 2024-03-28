@@ -4,6 +4,9 @@ import {
   CreateTeacherRequest,
   UpdateTeacherRequest,
 } from '../pages/api/teachers/request';
+import { PaginationParam } from '../@types/pagination';
+import { TeacherEntity } from '../infrastructure/database/teacher/teacher.entity';
+import { ILike } from 'typeorm';
 
 export class TeacherService {
   public static readonly service: TeacherService = new TeacherService();
@@ -11,8 +14,23 @@ export class TeacherService {
     return TeacherService.service;
   }
 
-  async getTeachers() {
-    const teachers = await TeacherRepository.getRepository().getPaginated();
+  async getTeachers(params: PaginationParam<string>) {
+    let where = {};
+    if (params.search) {
+      where = [
+        { name: ILike(`%${params.search}%`) },
+        { employeeId: params.search },
+      ]
+    }
+    const teachers = await TeacherRepository.getRepository().getPaginated(
+      {
+        page: params.page,
+        size: params.size,
+      },
+      {
+        where,
+      }
+    );
     return teachers;
   }
 

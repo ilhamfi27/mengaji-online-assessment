@@ -3,7 +3,14 @@
 import SimpleDialog from 'src/components/Dialog/SimpleDialog';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { IconButton, Box, Button, TextField } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridPaginationModel,
+  GridToolbar,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import ProductForm from './TeacherForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
@@ -11,7 +18,15 @@ import { useTeacher } from '@/src/hooks/useTeacher';
 import { Teacher } from '@/src/services/teacher';
 
 const TeacherList = () => {
-  const { teachers, refreshTeachers, teacher, setTeacher } = useTeacher();
+  const {
+    teachers,
+    refreshTeachers,
+    isLoading,
+    teacher,
+    setTeacher,
+    filter,
+    setFilter,
+  } = useTeacher();
   const [modalOpen, setModalOpen] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
 
@@ -27,9 +42,9 @@ const TeacherList = () => {
   const handleOk = (p: any) => {};
 
   const columns: GridColDef<any>[] = [
-    { field: 'employeeId', headerName: 'Employee ID' },
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'email', headerName: 'Email', width: 130 },
+    { field: 'employeeId', headerName: 'Employee ID', width: 150 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'email', headerName: 'Email', width: 300 },
     {
       field: 'id',
       headerName: 'Action',
@@ -79,16 +94,46 @@ const TeacherList = () => {
       >
         <DataGrid
           rows={teachers?.items ?? []}
+          rowCount={teachers?.totalSize ?? 0}
           columns={columns}
+          loading={isLoading}
           initialState={{
             pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
+              paginationModel: { page: 0, pageSize: 10 },
             },
           }}
           pageSizeOptions={[10, 20, 50]}
-          checkboxSelection
-          disableColumnSelector={true}
-          disableRowSelectionOnClick={true}
+          paginationMode="server"
+          disableColumnSelector
+          disableRowSelectionOnClick
+          disableColumnFilter
+          disableDensitySelector
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
+          onPaginationModelChange={(
+            newPaginationModel: GridPaginationModel
+          ) => {
+            const newPage = newPaginationModel.page + 1;
+            if (
+              filter.page !== newPage ||
+              filter.size !== newPaginationModel.pageSize
+            ) {
+              setFilter({
+                ...filter,
+                page: newPage,
+                size: newPaginationModel.pageSize,
+              });
+            }
+          }}
+          filterMode="server"
+          onFilterModelChange={(filterModel: GridFilterModel) => {
+            const [value] = filterModel.quickFilterValues ?? [];
+            setFilter({ ...filter, search: value });
+          }}
         />
       </Box>
       {willDelete ? (

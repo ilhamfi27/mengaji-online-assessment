@@ -1,11 +1,13 @@
-import { IsNumberString } from 'class-validator';
+import { IsNumberString, IsObject } from 'class-validator';
 
-export class PaginationParam {
+export class PaginationParam<T = any> {
   @IsNumberString()
   page!: number;
 
   @IsNumberString()
   size!: number;
+
+  search?: T | Partial<T>;
 }
 
 export interface Paginated<T> {

@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from 'next-api-decorators';
 import { CreateTeacherRequest, UpdateTeacherRequest } from './request';
 
@@ -19,8 +20,16 @@ class TeacherHandler {
   }
   @Get()
   @HttpCode(200)
-  index() {
-    return TeacherService.getService().getTeachers();
+  index(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return TeacherService.getService().getTeachers({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
   }
 
   @Post()

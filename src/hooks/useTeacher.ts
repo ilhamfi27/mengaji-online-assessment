@@ -6,12 +6,18 @@ import {
   Teacher,
 } from '../services/teacher';
 import { useEffect, useState } from 'react';
+import { PaginationParam } from '../@types/pagination';
 
 export const useTeacher = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState();
   const [data, setData] = useState<Teacher | null>(null);
+  const [filter, setFilter] = useState<PaginationParam<string>>({
+    page: 1,
+    size: 10,
+    search: '',
+  });
 
   const {
     data: teachers,
@@ -19,7 +25,7 @@ export const useTeacher = () => {
     isLoading: fetchLoading,
     mutate: refreshTeachers,
     isValidating,
-  } = useSWR('/teachers', getTeachers);
+  } = useSWR(['/teachers', filter], () => getTeachers(filter));
 
   useEffect(() => {
     setIsLoading(fetchLoading);
@@ -37,5 +43,7 @@ export const useTeacher = () => {
     updateTeacher,
     teacher: data,
     setTeacher: setData,
+    filter,
+    setFilter,
   };
 };

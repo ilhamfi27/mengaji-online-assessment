@@ -26,4 +26,5 @@ export const dataSourceOptions: DataSourceOptions = {
   subscribers: [],
   poolSize: config.db.maxPoolConnection as number,
   charset: 'utf8mb4',
+  logging: true,
 };
