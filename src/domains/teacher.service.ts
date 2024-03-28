@@ -1,3 +1,4 @@
+import { ConflictException } from 'next-api-decorators';
 import { TeacherRepository } from '../infrastructure/database/teacher/teacher.repository';
 import {
   CreateTeacherRequest,
@@ -23,6 +24,12 @@ export class TeacherService {
   }
 
   async createTeacher(teacher: CreateTeacherRequest) {
+    const teacherExists = await TeacherRepository.getRepository().findOne({
+      where: [{ email: teacher.email }, { employeeId: teacher.employeeId }],
+    });
+    if (teacherExists) {
+      throw new ConflictException('Teacher already exists');
+    }
     const newTeacher = await TeacherRepository.getRepository().save(teacher);
     return newTeacher;
   }

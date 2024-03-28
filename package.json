@@ -16,6 +16,14 @@
     "typeorm:show": "npm run typeorm migration:show -- -d ./src/infrastructure/database/provider/index.ts"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
+    "@mui/material-nextjs": "^5.15.11",
+    "@mui/x-data-grid": "6.19.3",
+    "axios": "^1.6.8",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "mysql": "^2.18.1",
@@ -24,7 +32,10 @@
     "path-to-regexp": "^6.2.1",
     "react": "^18",
     "react-dom": "^18",
-    "typeorm": "^0.3.20"
+    "react-hook-form": "^7.51.2",
+    "swr": "^2.2.5",
+    "typeorm": "^0.3.20",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.3",

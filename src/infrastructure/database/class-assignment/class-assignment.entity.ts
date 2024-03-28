@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { ClassEntity } from '../active-class/active-class.entity';
+import { ActiveClassEntity } from '../active-class/active-class.entity';
 import { SubjectEntity } from '../subject/subject.entity';
 import { TeacherEntity } from '../teacher/teacher.entity';
 
@@ -14,8 +14,8 @@ export class ClassAssignmentEntity {
   @Column({ type: 'integer' })
   duration!: number;
 
-  @ManyToOne(() => ClassEntity, (cls) => cls.id)
-  activeClass!: ClassEntity;
+  @ManyToOne(() => ActiveClassEntity, (cls) => cls.id)
+  activeClass!: ActiveClassEntity;
 
   @ManyToOne(() => TeacherEntity, (teacher) => teacher.id, { nullable: true })
   teacher?: TeacherEntity;

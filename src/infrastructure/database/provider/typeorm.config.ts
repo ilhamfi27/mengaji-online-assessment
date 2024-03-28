@@ -3,7 +3,7 @@ import { config } from 'src/config';
 import { resolve, join } from 'path';
 import { TeacherEntity } from '../teacher/teacher.entity';
 import { SubjectEntity } from '../subject/subject.entity';
-import { ClassEntity } from '../active-class/active-class.entity';
+import { ActiveClassEntity } from '../active-class/active-class.entity';
 import { ClassAssignmentEntity } from '../class-assignment/class-assignment.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -13,7 +13,7 @@ export const dataSourceOptions: DataSourceOptions = {
   username: config.db.username,
   password: config.db.password,
   database: config.db.name,
-  entities: [TeacherEntity, SubjectEntity, ClassEntity, ClassAssignmentEntity],
+  entities: [TeacherEntity, SubjectEntity, ActiveClassEntity, ClassAssignmentEntity],
   migrations: [resolve(join(__dirname, 'migrations/*.{ts,js}'))],
   synchronize: false,
   logger: 'simple-console',

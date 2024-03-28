@@ -6,15 +6,27 @@ import {
   Get,
   HttpCode,
   Param,
+  Post,
   Put,
 } from 'next-api-decorators';
-import { UpdateTeacherRequest } from './request';
+import { CreateTeacherRequest, UpdateTeacherRequest } from './request';
 
-class DetailTeacherHandler {
+class TeacherHandler {
   @Get('/:id')
   @HttpCode(200)
   show(@Param('id') id: string) {
     return TeacherService.getService().getTeacherById(id);
+  }
+  @Get()
+  @HttpCode(200)
+  index() {
+    return TeacherService.getService().getTeachers();
+  }
+
+  @Post()
+  @HttpCode(201)
+  create(@Body() body: CreateTeacherRequest) {
+    return TeacherService.getService().createTeacher(body);
   }
 
   @Put('/:id')
@@ -30,4 +42,4 @@ class DetailTeacherHandler {
   }
 }
 
-export default createHandler(DetailTeacherHandler);
+export default createHandler(TeacherHandler);
