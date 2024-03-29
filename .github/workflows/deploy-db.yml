@@ -1,0 +1,28 @@
+run-name: Run deploy-db workflow by @${{ github.actor }}
+name: db-deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DB_STRING_URL: ${{ secrets.DB_STRING_URL }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    environment: production
+    if: github.ref_name == 'main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Deploy migrations and seed
+        run: yarn typeorm:run && yarn db:seed
