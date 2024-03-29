@@ -15,13 +15,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import HomeIcon from '@mui/icons-material/Home';
 import DiscountIcon from '@mui/icons-material/Discount';
-import { FC, PropsWithChildren, ReactNode, useContext, useState } from 'react';
+import { FC, PropsWithChildren, useContext, useState } from 'react';
 import SidebarItem from '@/src/components/ListItem/SidebarItem';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AccountCircle } from '@mui/icons-material';
 import { Menu, MenuItem } from '@mui/material';
+import { AuthContext } from '@/src/context/Auth';
+import { logout } from '@/src/services/auth';
 
 const drawerWidth = 240;
 
@@ -76,6 +77,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
+  const { user, setUser } = useContext(AuthContext);
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const router = useRouter();
@@ -97,9 +99,14 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const handleLogout = () => {
-    setOpen(false);
-    setAnchorEl(null);
-    router.push('/');
+    logout()
+      .then(() => {
+        router.push('/login');
+        setOpen(false);
+        setAnchorEl(null);
+        setUser(null);
+      })
+      .catch(() => {});
   };
 
   return (
@@ -122,7 +129,7 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
               </Typography>
             </Link>
           </div>
-          {false && (
+          {user && (
             <div className="flex gap-4">
               <IconButton
                 aria-label="account of current user"
@@ -148,7 +155,7 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem style={{ cursor: 'default' }}>John Doe</MenuItem>
+                <MenuItem style={{ cursor: 'default' }}>{user.name}</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>

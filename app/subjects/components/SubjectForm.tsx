@@ -5,18 +5,9 @@ import { useSnackbar } from '@/src/hooks/useSnackbar';
 import { useSubject } from '@/src/hooks/useSubject';
 import { Subject } from '@/src/services/subject';
 import useYupValidationResolver from '@/src/utils/form';
-import {
-  Box,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect } from 'react';
-import { FieldError, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 type SubjectFormProps = {
@@ -27,6 +18,7 @@ type SubjectFormProps = {
 
 let subjectSchema = yup.object({
   name: yup.string().required(),
+  code: yup.string().required(),
 });
 
 const SubjectForm: FC<SubjectFormProps> = ({
@@ -46,6 +38,7 @@ const SubjectForm: FC<SubjectFormProps> = ({
 
   useEffect(() => {
     setValue('name', subject?.name as string);
+    setValue('code', subject?.code as string);
   }, [subject]);
 
   useEffect(() => {
@@ -99,7 +92,23 @@ const SubjectForm: FC<SubjectFormProps> = ({
         width: 600,
       }}
     >
-      <form onSubmit={handleSubmit((d) => formSubmitHandler(d as Subject))}>
+      <form
+        onSubmit={handleSubmit((d) => {
+          console.log();
+          
+          formSubmitHandler(d as Subject);
+        })}
+      >
+        <TextField
+          margin="normal"
+          fullWidth
+          id="code"
+          label="Code"
+          autoComplete="code"
+          autoFocus
+          error={!!errors.name}
+          {...formRegister('code')}
+        />
         <TextField
           margin="normal"
           fullWidth

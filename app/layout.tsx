@@ -6,6 +6,7 @@ import theme from '../theme';
 import './globals.css';
 import MainLayout from './layout/MainLayout';
 import { SnackbarProvider } from '@/src/providers/SnackbarProvider';
+import { AuthContextProvider } from '@/src/context/Auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,7 +26,9 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <SnackbarProvider>
-              <MainLayout>{children}</MainLayout>
+              <AuthContextProvider>
+                <MainLayout>{children}</MainLayout>
+              </AuthContextProvider>
             </SnackbarProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

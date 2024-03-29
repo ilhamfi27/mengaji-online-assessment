@@ -49,6 +49,7 @@ const SubjectList = () => {
   };
 
   const columns: GridColDef<any>[] = [
+    { field: 'code', headerName: 'Code', width: 200 },
     { field: 'name', headerName: 'Name', width: 400 },
     {
       field: 'id',

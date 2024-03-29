@@ -15,12 +15,15 @@ export class SubjectEntity {
   @Column({ type: 'varchar', length: 255 })
   name!: string;
 
+  @Column({ type: 'varchar', length: 255, default: '' })
+  code!: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt?: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', select: false})
+  @DeleteDateColumn({ type: 'timestamp', select: false })
   deletedAt?: Date;
 }

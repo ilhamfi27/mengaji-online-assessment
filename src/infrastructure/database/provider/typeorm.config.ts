@@ -5,6 +5,7 @@ import { TeacherEntity } from '../teacher/teacher.entity';
 import { SubjectEntity } from '../subject/subject.entity';
 import { ActiveClassEntity } from '../active-class/active-class.entity';
 import { ClassAssignmentEntity } from '../class-assignment/class-assignment.entity';
+import { UserEntity } from '../user/user.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: config.db.type as any,
@@ -19,6 +20,7 @@ export const dataSourceOptions: DataSourceOptions = {
     SubjectEntity,
     ActiveClassEntity,
     ClassAssignmentEntity,
+    UserEntity,
   ],
   migrations: [resolve(join(__dirname, 'migrations/*.{ts,js}'))],
   synchronize: false,

@@ -5,7 +5,6 @@ import {
   UpdateTeacherRequest,
 } from '../pages/api/teachers/request';
 import { PaginationParam } from '../@types/pagination';
-import { TeacherEntity } from '../infrastructure/database/teacher/teacher.entity';
 import { ILike } from 'typeorm';
 
 export class TeacherService {

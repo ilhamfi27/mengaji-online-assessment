@@ -12,4 +12,5 @@ export const config = {
     schema: 'public',
     maxPoolConnection: process.env.DB_MAX_POOL_CONNECTION ?? 10,
   },
+  jwtSecret: process.env.JWT_SECRET ?? 'super-secret-jwt-key',
 };

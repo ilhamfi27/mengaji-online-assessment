@@ -4,6 +4,7 @@ import { request } from './request';
 
 export interface Subject extends Generic {
   name: string;
+  code: string;
 }
 
 export const getSubjects = async ({

@@ -7,22 +7,30 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'teachers' })
-export class TeacherEntity {
+export enum UserRole {
+  ADMIN = 'admin',
+  TEACHER = 'teacher',
+}
+
+@Entity({ name: 'users' })
+export class UserEntity {
+  constructor(partial: Partial<UserEntity>) {
+    Object.assign(this, partial);
+  }
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  name!: string;
-
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  employeeId!: string;
+  password!: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  gender!: string;
+  @Column({ type: 'varchar', length: 255, nullable: true})
+  name!: string;
+
+  @Column({ type: 'enum', enum: ['admin', 'teacher'] })
+  role!: UserRole;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt?: Date;
