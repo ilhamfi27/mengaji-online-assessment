@@ -22,5 +22,8 @@ jobs:
         with:
           node-version: 18
 
+      - name: install dependencies
+        run: yarn install
+
       - name: Deploy migrations and seed
         run: yarn typeorm:run && yarn db:seed
