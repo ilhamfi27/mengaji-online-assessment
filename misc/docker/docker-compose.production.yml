@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  app:
+    image: ilhamfadhilah/class-management:latest
+    build:
+      context: ../../
+      dockerfile: ./misc/docker/dockerfile
+    restart: always
+    depends_on:
+      - app-migrator
+      - postgresql
+    environment:
+      - DB_STRING_URL=$DB_STRING_URL
+    ports:
+      - '1321:1321'
+
+  app-migrator:
+    image: ilhamfadhilah/class-management:latest
+    build:
+      context: ../../
+      dockerfile: ./misc/docker/dockerfile
+    restart: always
+    depends_on:
+      - postgresql
+    environment:
+      - DB_STRING_URL=$DB_STRING_URL
+    command: ['yarn', 'typeorm:run', '&&', 'yarn', 'db:seed']
+
+  postgresql:
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '35432:5432'
+    volumes:
+      - ./volumes/postgresql:/var/lib/postgresql/data
+networks:
+  default:

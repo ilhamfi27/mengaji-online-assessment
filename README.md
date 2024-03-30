@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Coding Assessment
 
-## Getting Started
+This project using NextJS built using monorepo architecture
 
-First, run the development server:
+## Prerequisite
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Docker
+2. NodeJS Min Version 18
+
+## Running Application In Dev Mode
+
+1. run the docker services for backend
+
+   ```
+   yarn docker-compose up -d
+   ```
+
+   Make sure all service has running
+   ![plot](./assets/running-docker-dev.png)
+
+2. start the application
+
+   ```
+   yarn dev
+   ```
+
+3. Run database migration
+
+   ```
+   yarn typeorm:run
+   ```
+
+4. Run database seed for initialize application data
+
+   ```
+   yarn db:seed
+   ```
+
+5. Open the application on http://localhost:1321
+
+## Running App In Production Mode
+
+1. Build application
+
+   ```
+   yarn build
+   ```
+
+2. Run database migration
+
+   ```
+   yarn typeorm:run
+   ```
+
+3. Run database seed for initialize application data
+
+   ```
+   yarn db:seed
+   ```
+
+4. Start application in production mode
+
+   ```
+   yarn start
+   ```
+
+5. Open the application on http://localhost:1321
+
+## Build Docker Image
+
+1. change directory to ./misc/docker
+
+   ```
+   cd misc/docker
+   ```
+
+2. build using `docker compose` command
+
+   ```
+   docker compose -f docker-compose.production.yml build app
+   ```
+
+## Run Production Mode using Docker
+
+1. change directory to ./misc/docker
+
+   ```
+   cd misc/docker
+   ```
+
+2. copy .env file for docker compose
+
+   ```
+   cp ../../.env .env
+   ```
+
+3. run application using `docker compose` command
+
+   ```
+   docker compose -f docker-compose.production.yml up -d
+   ```
+
+## Default User Auth
+
+### Admin
+
+```
+email: admin@test.net
+password: admin
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployed Application
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can review the deployed version application on: https://mengaji-online-assessment.vercel.app
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Screenshots
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![plot](./assets/signin.png)
+![plot](./assets/signup.png)
+![plot](./assets/dashboard.png)
+![plot](./assets/products.png)
+![plot](./assets/discount-rules.png)
+![plot](./assets/buyer-view.png)
+![plot](./assets/cart-view.png)
+![plot](./assets/checkout.png)
