@@ -25,5 +25,8 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: Deploy migrations and seed
-        run: yarn typeorm:run && yarn db:seed
+      - name: Deploy migrations
+        run: yarn typeorm:run
+
+      - name: seed database
+        run: yarn db:seed
