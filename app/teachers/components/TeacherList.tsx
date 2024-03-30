@@ -11,7 +11,7 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import ProductForm from './TeacherForm';
+import TeacherForm from './TeacherForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
 import { useTeacher } from '@/src/hooks/useTeacher';
 import { Teacher } from '@/src/services/teacher';
@@ -52,6 +52,12 @@ const TeacherList = () => {
     { field: 'employeeId', headerName: 'Employee ID', width: 150 },
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'email', headerName: 'Email', width: 300 },
+    {
+      field: 'subject.id',
+      headerName: 'Subject',
+      width: 300,
+      renderCell: (param) => param.row.subject.name,
+    },
     {
       field: 'id',
       headerName: 'Action',
@@ -167,7 +173,7 @@ const TeacherList = () => {
           title={`${teacher ? 'Edit' : 'Add'} Teacher`}
           maxWidth="md"
         >
-          <ProductForm
+          <TeacherForm
             data={teacher as Teacher}
             onSubmitSuccess={() => {
               setModalOpen(false);

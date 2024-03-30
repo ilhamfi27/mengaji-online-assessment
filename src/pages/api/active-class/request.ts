@@ -2,6 +2,7 @@ import { IsDateString, IsNumber, IsString } from 'class-validator';
 import { CreateTeacherRequest } from '../teachers/request';
 import { CreateSubjectRequest } from '../subjects/request';
 import { Type } from 'class-transformer';
+import { TeacherEntity } from '@/src/infrastructure/database/teacher/teacher.entity';
 
 export class CreateActiveClassRequest {
   @IsString()
@@ -13,11 +14,8 @@ export class CreateActiveClassRequest {
   @IsNumber()
   duration!: number;
 
-  @Type(() => CreateTeacherRequest)
-  teacher?: CreateTeacherRequest;
-
-  @Type(() => CreateSubjectRequest)
-  subject!: CreateSubjectRequest;
+  @Type(() => TeacherEntity)
+  teacher?: TeacherEntity;
 }
 
 export class UpdateActiveClassRequest extends CreateActiveClassRequest {}

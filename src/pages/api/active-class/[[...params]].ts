@@ -8,14 +8,23 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from 'next-api-decorators';
 import { CreateActiveClassRequest, UpdateActiveClassRequest } from './request';
 
 class ClassHandler {
   @Get()
   @HttpCode(201)
-  index() {
-    return ActiveClassService.getService().getActiveClasses();
+  index(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return ActiveClassService.getService().getActiveClasses({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
   }
 
   @Post()

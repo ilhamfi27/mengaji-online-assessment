@@ -3,9 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  type Relation,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { SubjectEntity } from '../subject/subject.entity';
+import { ActiveClassEntity } from '../active-class/active-class.entity';
 
 @Entity({ name: 'teachers' })
 export class TeacherEntity {
@@ -23,6 +28,14 @@ export class TeacherEntity {
 
   @Column({ type: 'varchar', length: 255 })
   gender!: string;
+
+  @ManyToOne(() => SubjectEntity, (subject) => subject.teachers, {
+    onDelete: 'CASCADE',
+  })
+  subject!: Relation<SubjectEntity>;
+
+  @OneToMany(() => ActiveClassEntity, (activeClass) => activeClass.teacher)
+  activeClasses!: ActiveClassEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt?: Date;

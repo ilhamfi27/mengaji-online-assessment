@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from 'next-api-decorators';
 import { CreateSubjectRequest, UpdateSubjectRequest } from './request';
 
@@ -20,8 +21,16 @@ class SubjectHandler {
 
   @Get()
   @HttpCode(201)
-  index() {
-    return SubjectService.getService().getSubjects();
+  index(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return SubjectService.getService().getSubjects({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
   }
 
   @Post()

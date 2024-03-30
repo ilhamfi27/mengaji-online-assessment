@@ -1,12 +1,14 @@
 import { Generic } from '../@types/generic';
 import { Paginated, PaginationParam } from '../@types/pagination';
 import { request } from './request';
+import { Subject } from './subject';
 
 export interface Teacher extends Generic {
   name: string;
   email: string;
   employeeId: string;
   gender: string;
+  subject: Subject;
 }
 
 export const getTeachers = async ({

@@ -2,7 +2,9 @@
 
 import FormError from '@/src/components/Error/FormError';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
+import { useSubject } from '@/src/hooks/useSubject';
 import { useTeacher } from '@/src/hooks/useTeacher';
+import { Subject } from '@/src/services/subject';
 import { Teacher } from '@/src/services/teacher';
 import useYupValidationResolver from '@/src/utils/form';
 import {
@@ -11,6 +13,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  MenuItem,
   Radio,
   RadioGroup,
   TextField,
@@ -30,6 +33,7 @@ let teacherSchema = yup.object({
   email: yup.string().email().required(),
   employeeId: yup.string().required(),
   gender: yup.string().required(),
+  subject: yup.object().required(),
 });
 
 const TeacherForm: FC<TeacherFormProps> = ({
@@ -46,12 +50,22 @@ const TeacherForm: FC<TeacherFormProps> = ({
   } = useForm({ resolver });
   const { createTeacher, updateTeacher, setTeacher, teacher, refreshTeachers } =
     useTeacher();
+  const { subjects, refreshSubjects, setFilter: subjectFilter } = useSubject();
+
+  useEffect(() => {
+    subjectFilter({
+      page: 1,
+      size: 1000,
+    });
+    refreshSubjects();
+  }, []);
 
   useEffect(() => {
     setValue('name', teacher?.name as string);
     setValue('email', teacher?.email as string);
     setValue('employeeId', teacher?.employeeId as string);
     setValue('gender', teacher?.gender as string);
+    setValue('subject', teacher?.subject as Subject);
   }, [teacher]);
 
   useEffect(() => {
@@ -156,6 +170,38 @@ const TeacherForm: FC<TeacherFormProps> = ({
           </RadioGroup>
           <FormError errorMessage={errors.gender as FieldError} />
         </FormControl>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="subject"
+          label="Subject"
+          name="subject"
+          autoComplete="subject"
+          autoFocus
+          select
+          value={teacher?.subject ? teacher?.subject.id : ''}
+          onChange={(e) => {
+            setTeacher({
+              ...teacher,
+              subject: subjects?.items?.find(
+                (subject) => subject.id === e.target.value
+              ) as Subject,
+            } as Teacher);
+          }}
+        >
+          {subjects?.items?.map((subject) => (
+            <MenuItem
+              key={subject.id}
+              value={subject.id}
+              selected={
+                !!teacher?.subject && teacher?.subject.id === subject.id
+              }
+            >
+              {subject.code} - {subject.name}
+            </MenuItem>
+          ))}
+        </TextField>
         <div className="flex w-full justify-center">
           <Button type="submit" fullWidth>
             Save

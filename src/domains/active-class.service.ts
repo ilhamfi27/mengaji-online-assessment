@@ -1,8 +1,12 @@
+import { NotFoundException } from 'next-api-decorators';
 import { ActiveClassRepository } from '../infrastructure/database/active-class/active-class.repository';
+import { TeacherRepository } from '../infrastructure/database/teacher/teacher.repository';
 import {
   CreateActiveClassRequest,
   UpdateActiveClassRequest,
 } from '../pages/api/active-class/request';
+import { PaginationParam } from '../@types/pagination';
+import { ILike } from 'typeorm';
 
 export class ActiveClassService {
   public static readonly service: ActiveClassService = new ActiveClassService();
@@ -10,8 +14,21 @@ export class ActiveClassService {
     return ActiveClassService.service;
   }
 
-  async getActiveClasses() {
-    const subjects = await ActiveClassRepository.getRepository().getPaginated();
+  async getActiveClasses(params: PaginationParam<string>) {
+    let where = {};
+    if (params.search) {
+      where = [{ name: ILike(`%${params.search}%`) }];
+    }
+    const subjects = await ActiveClassRepository.getRepository().getPaginated(
+      {
+        page: params.page,
+        size: params.size,
+      },
+      {
+        where,
+        relations: ['teacher', 'teacher.subject'],
+      }
+    );
     return subjects;
   }
 
@@ -22,16 +39,25 @@ export class ActiveClassService {
     return subject;
   }
 
-  async createActiveClass(subject: CreateActiveClassRequest) {
-    const newActiveClass = await ActiveClassRepository.getRepository().save(
-      subject
-    );
+  async createActiveClass(activeClass: CreateActiveClassRequest) {
+    const teacher = await TeacherRepository.getRepository().findOne({
+      where: { id: activeClass.teacher?.id },
+    });
+    if (!teacher) {
+      throw new NotFoundException('Teacher not found');
+    }
+    const newActiveClass = await ActiveClassRepository.getRepository().save({
+      name: activeClass.name,
+      duration: activeClass.duration,
+      dateAndTime: activeClass.dateAndTime,
+      teacher: teacher,
+    });
     return newActiveClass;
   }
 
-  async updateActiveClass(id: string, subject: UpdateActiveClassRequest) {
+  async updateActiveClass(id: string, activeClass: UpdateActiveClassRequest) {
     const updatedActiveClass =
-      await ActiveClassRepository.getRepository().update(id, subject);
+      await ActiveClassRepository.getRepository().update(id, activeClass);
     return updatedActiveClass;
   }
 

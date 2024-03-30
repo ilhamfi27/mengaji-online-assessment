@@ -1,3 +1,5 @@
+import { ILike } from 'typeorm';
+import { PaginationParam } from '../@types/pagination';
 import { SubjectRepository } from '../infrastructure/database/subject/subject.repository';
 import {
   CreateSubjectRequest,
@@ -10,8 +12,20 @@ export class SubjectService {
     return SubjectService.service;
   }
 
-  async getSubjects() {
-    const subjects = await SubjectRepository.getRepository().getPaginated();
+  async getSubjects(params: PaginationParam<string>) {
+    let where = {};
+    if (params.search) {
+      where = [{ name: ILike(`%${params.search}%`) }, { code: params.search }];
+    }
+    const subjects = await SubjectRepository.getRepository().getPaginated(
+      {
+        page: params.page,
+        size: params.size,
+      },
+      {
+        where,
+      }
+    );
     return subjects;
   }
 

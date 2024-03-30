@@ -9,7 +9,7 @@
         "lint": "next lint",
         "docker-compose": "docker-compose -f misc/docker/docker-compose.yml",
         "typeorm": "cross-env DOTENV_CONFIG_PATH=./.env node -r tsconfig-paths/register -r ts-node/register -r dotenv/config ./node_modules/typeorm/cli",
-        "typeorm:create": "npm run typeorm migration:create",
+        "typeorm:create": "npm run typeorm migration:create -o ./src/infrastructure/database/provider/migrations/$NAME",
         "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/infrastructure/database/provider/index.ts ./src/infrastructure/database/provider/migrations/$NAME",
         "typeorm:run": "npm run typeorm migration:run -- -d ./src/infrastructure/database/provider/index.ts",
         "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/infrastructure/database/provider/index.ts",

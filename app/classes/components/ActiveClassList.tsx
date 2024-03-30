@@ -49,8 +49,26 @@ const ActiveClassList = () => {
   };
 
   const columns: GridColDef<any>[] = [
-    { field: 'code', headerName: 'Code', width: 200 },
-    { field: 'name', headerName: 'Name', width: 400 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    {
+      field: 'teacher.name',
+      headerName: 'Teacher',
+      width: 200,
+      renderCell: (param) => param.row.teacher.name,
+    },
+    {
+      field: 'subject.name',
+      headerName: 'Subject',
+      width: 200,
+      renderCell: (param) => param.row.teacher.subject.name,
+    },
+    { field: 'duration', headerName: 'Duration', width: 200 },
+    {
+      field: 'dateAndTime',
+      headerName: 'Date and Time',
+      width: 200,
+      renderCell: (param) => new Date(param.value).toLocaleString(),
+    },
     {
       field: 'id',
       headerName: 'Action',

@@ -1,6 +1,5 @@
 'use client';
 
-import FormError from '@/src/components/Error/FormError';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
 import { useActiveClass } from '@/src/hooks/useActiveClass';
 import { ActiveClass } from '@/src/services/active-class';
@@ -10,10 +9,8 @@ import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { Teacher } from '@/src/services/teacher';
-import { Subject } from '@/src/services/subject';
 import DateTimePicker from '@/src/components/DateTimePicker';
 import { useTeacher } from '@/src/hooks/useTeacher';
-import { useSubject } from '@/src/hooks/useSubject';
 
 type ActiveClassFormProps = {
   data?: ActiveClass;
@@ -26,7 +23,6 @@ let activeClassSchema = yup.object({
   dateAndTime: yup.date().required(),
   duration: yup.number().required(),
   teacher: yup.object().required(),
-  subject: yup.object().required(),
 });
 
 const ActiveClassForm: FC<ActiveClassFormProps> = ({
@@ -167,23 +163,25 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
           autoComplete="teacher"
           autoFocus
           select
-          // value={formValue && formValue.product.id}
-          // onChange={(e) => {
-          //   setFormValue({
-          //     ...formValue,
-          //     product: products.find(
-          //       (product) => product.id === Number(e.target.value)
-          //     ),
-          //   } as DiscountRules);
-          // }}
+          value={activeClass?.teacher ? activeClass?.teacher.id : ''}
+          onChange={(e) => {
+            setActiveClass({
+              ...activeClass,
+              teacher: teachers?.items?.find(
+                (teacher) => teacher.id === e.target.value
+              ) as Teacher,
+            } as ActiveClass);
+          }}
         >
           {teachers?.items?.map((teacher) => (
             <MenuItem
               key={teacher.id}
               value={teacher.id}
-              selected={activeClass?.teacher.id === teacher.id}
+              selected={
+                !!activeClass?.teacher && activeClass?.teacher.id === teacher.id
+              }
             >
-              {teacher.employeeId} - {teacher.name} ({teacher.email})
+              {teacher.employeeId} - {teacher.name} ({teacher.subject.name})
             </MenuItem>
           ))}
         </TextField>

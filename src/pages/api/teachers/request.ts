@@ -1,3 +1,5 @@
+import { SubjectEntity } from '@/src/infrastructure/database/subject/subject.entity';
+import { Type } from 'class-transformer';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 
 enum Gender {
@@ -18,6 +20,9 @@ export class CreateTeacherRequest {
 
   @IsEnum(Gender)
   gender!: string;
+
+  @Type(() => SubjectEntity)
+  subject!: SubjectEntity;
 }
 
 export class UpdateTeacherRequest extends CreateTeacherRequest {}
