@@ -29,9 +29,7 @@ export class TeacherEntity {
   @Column({ type: 'varchar', length: 255 })
   gender!: string;
 
-  @ManyToOne(() => SubjectEntity, (subject) => subject.teachers, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => SubjectEntity, (subject) => subject.teachers)
   subject!: Relation<SubjectEntity>;
 
   @OneToMany(() => ActiveClassEntity, (activeClass) => activeClass.teacher)
@@ -43,6 +41,6 @@ export class TeacherEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', select: false })
+  @DeleteDateColumn({ type: 'timestamp', select: true })
   deletedAt?: Date;
 }

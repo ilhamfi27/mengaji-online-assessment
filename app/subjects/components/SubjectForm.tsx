@@ -31,14 +31,53 @@ const SubjectForm: FC<SubjectFormProps> = ({
   const {
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm({ resolver });
-  const { createSubject, updateSubject, setSubject, subject, refreshSubjects } =
-    useSubject();
+  const {
+    createSubject,
+    updateSubject,
+    setSubject,
+    subject,
+    refreshSubjects,
+    checkSubjectProperty,
+  } = useSubject();
 
   useEffect(() => {
     setValue('name', subject?.name as string);
     setValue('code', subject?.code as string);
+    if (subject?.name) {
+      checkSubjectProperty('name', { name: subject.name })
+        .then(() => {
+          setError('name', {
+            type: 'manual',
+            message: '',
+          });
+        })
+        .catch((err) => {
+          setError('name', {
+            type: 'manual',
+            message: 'Name already exists',
+          });
+        });
+    }
+    if (subject?.code) {
+      checkSubjectProperty('code', {
+        code: subject.code,
+      })
+        .then(() => {
+          setError('code', {
+            type: 'manual',
+            message: '',
+          });
+        })
+        .catch((err) => {
+          setError('code', {
+            type: 'manual',
+            message: 'Code already exists',
+          });
+        });
+    }
   }, [subject]);
 
   useEffect(() => {
@@ -95,7 +134,7 @@ const SubjectForm: FC<SubjectFormProps> = ({
       <form
         onSubmit={handleSubmit((d) => {
           console.log();
-          
+
           formSubmitHandler(d as Subject);
         })}
       >

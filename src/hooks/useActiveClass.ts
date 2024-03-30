@@ -4,7 +4,10 @@ import {
   createActiveClass,
   updateActiveClass,
   deleteActiveClass,
+  undeleteActiveClass,
   ActiveClass,
+  getArchivedActiveClasss,
+  checkActiveClassProperty,
 } from '../services/active-class';
 import { useEffect, useState } from 'react';
 import { PaginationParam } from '../@types/pagination';
@@ -34,6 +37,22 @@ export const useActiveClass = () => {
     setIsFetching(isValidating);
   }, [fetchError, fetchLoading, isValidating]);
 
+  const {
+    data: archivedActiveClass,
+    error: fetchArchivedError,
+    isLoading: fetchArchivedLoading,
+    mutate: refreshArchivedActiveClass,
+    isValidating: isArchivedValidating,
+  } = useSWR(['/teachers/archived', filter], () =>
+    getArchivedActiveClasss(filter)
+  );
+
+  useEffect(() => {
+    setIsLoading(fetchArchivedLoading);
+    setError(fetchArchivedError);
+    setIsFetching(isArchivedValidating);
+  }, [fetchArchivedError, fetchArchivedLoading, isArchivedValidating]);
+
   return {
     activeClasses,
     error,
@@ -43,9 +62,13 @@ export const useActiveClass = () => {
     createActiveClass,
     updateActiveClass,
     deleteActiveClass,
+    undeleteActiveClass,
+    checkActiveClassProperty,
     activeClass: data,
     setActiveClass: setData,
     filter,
     setFilter,
+    archivedActiveClass,
+    refreshArchivedActiveClass,
   };
 };

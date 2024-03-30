@@ -4,7 +4,10 @@ import {
   createSubject,
   updateSubject,
   deleteSubject,
+  undeleteSubject,
   Subject,
+  getArchivedSubjects,
+  checkSubjectProperty,
 } from '../services/subject';
 import { useEffect, useState } from 'react';
 import { PaginationParam } from '../@types/pagination';
@@ -34,6 +37,20 @@ export const useSubject = () => {
     setIsFetching(isValidating);
   }, [fetchError, fetchLoading, isValidating]);
 
+  const {
+    data: archivedSubjects,
+    error: fetchArchivedError,
+    isLoading: fetchArchivedLoading,
+    mutate: refreshArchivedSubjects,
+    isValidating: isArchivedValidating,
+  } = useSWR(['/teachers/archived', filter], () => getArchivedSubjects(filter));
+
+  useEffect(() => {
+    setIsLoading(fetchArchivedLoading);
+    setError(fetchArchivedError);
+    setIsFetching(isArchivedValidating);
+  }, [fetchArchivedError, fetchArchivedLoading, isArchivedValidating]);
+
   return {
     subjects,
     error,
@@ -43,9 +60,13 @@ export const useSubject = () => {
     createSubject,
     updateSubject,
     deleteSubject,
+    undeleteSubject,
+    checkSubjectProperty,
     subject: data,
     setSubject: setData,
     filter,
     setFilter,
+    archivedSubjects,
+    refreshArchivedSubjects,
   };
 };

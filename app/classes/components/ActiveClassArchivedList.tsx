@@ -1,7 +1,7 @@
 'use client';
 
 import SimpleDialog from 'src/components/Dialog/SimpleDialog';
-import { Edit, Add, Archive } from '@mui/icons-material';
+import { Edit, Add, Archive, Unarchive } from '@mui/icons-material';
 import { IconButton, Box, Button } from '@mui/material';
 import {
   DataGrid,
@@ -11,21 +11,20 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import ActiveClassForm from './ActiveClassForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
 import { useActiveClass } from '@/src/hooks/useActiveClass';
 import { ActiveClass } from '@/src/services/active-class';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
 
-const ActiveClassList = () => {
+const ArchivedActiveClassList = () => {
   const {
-    activeClasses,
+    archivedActiveClass,
     refreshActiveClasss,
     refreshArchivedActiveClass,
     isLoading,
     activeClass,
     setActiveClass,
-    deleteActiveClass,
+    undeleteActiveClass,
     filter,
     setFilter,
   } = useActiveClass();
@@ -35,7 +34,6 @@ const ActiveClassList = () => {
 
   useEffect(() => {
     refreshActiveClasss();
-    refreshArchivedActiveClass();
   }, []);
 
   const handleButtonAction = (param: any) => {
@@ -44,10 +42,10 @@ const ActiveClassList = () => {
   };
 
   const handleOk = (p: ActiveClass) => {
-    deleteActiveClass(p.id as string).then(() => {
+    undeleteActiveClass(p.id as string).then(() => {
       refreshActiveClasss();
       refreshArchivedActiveClass();
-      showSnackbar('Class archived!', 'success');
+      showSnackbar('Class unarchived!', 'success');
     });
   };
 
@@ -81,21 +79,12 @@ const ActiveClassList = () => {
           <IconButton
             onClick={() => {
               handleButtonAction(param);
-            }}
-            aria-label="edit"
-            size="small"
-          >
-            <Edit />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              handleButtonAction(param);
               setWillDelete(true);
             }}
             aria-label="delete"
             size="small"
           >
-            <Archive />
+            <Unarchive />
           </IconButton>
         </>
       ),
@@ -104,24 +93,12 @@ const ActiveClassList = () => {
 
   return (
     <>
-      <div className="w-full flex gap-4 justify-end mb-4">
-        <Button
-          variant="contained"
-          onClick={() => {
-            setModalOpen(true);
-            setActiveClass(null);
-          }}
-        >
-          <Add />
-          Add Class
-        </Button>
-      </div>
       <Box
         sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
       >
         <DataGrid
-          rows={activeClasses?.items ?? []}
-          rowCount={activeClasses?.totalSize ?? 0}
+          rows={archivedActiveClass?.items ?? []}
+          rowCount={archivedActiveClass?.totalSize ?? 0}
           columns={columns}
           loading={isLoading}
           initialState={{
@@ -164,40 +141,22 @@ const ActiveClassList = () => {
           autoHeight
         />
       </Box>
-      {willDelete ? (
-        <ConfirmationDialog
-          open={modalOpen && willDelete}
-          handleClose={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-          }}
-          handleOk={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-            handleOk(activeClass as ActiveClass);
-          }}
-          title="Archive Class"
-          message={`Are you sure you want to archive ${activeClass?.name}?`}
-        />
-      ) : (
-        <SimpleDialog
-          open={modalOpen}
-          handleClose={() => {
-            setModalOpen(false);
-          }}
-          title={`${activeClass ? 'Edit' : 'Add'} Class`}
-          maxWidth="md"
-        >
-          <ActiveClassForm
-            data={activeClass as ActiveClass}
-            onSubmitSuccess={() => {
-              setModalOpen(false);
-            }}
-          />
-        </SimpleDialog>
-      )}
+      <ConfirmationDialog
+        open={modalOpen && willDelete}
+        handleClose={() => {
+          setModalOpen(false);
+          setWillDelete(false);
+        }}
+        handleOk={() => {
+          setModalOpen(false);
+          setWillDelete(false);
+          handleOk(activeClass as ActiveClass);
+        }}
+        title="Unarchive Class"
+        message={`Are you sure you want to unarchive ${activeClass?.name}?`}
+      />
     </>
   );
 };
 
-export default ActiveClassList;
+export default ArchivedActiveClassList;

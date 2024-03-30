@@ -1,7 +1,7 @@
 'use client';
 
 import SimpleDialog from 'src/components/Dialog/SimpleDialog';
-import { Edit, Add, Archive } from '@mui/icons-material';
+import { Edit, Add, Archive, Unarchive } from '@mui/icons-material';
 import { IconButton, Box, Button } from '@mui/material';
 import {
   DataGrid,
@@ -11,31 +11,29 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import SubjectForm from './SubjectForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
 import { useSubject } from '@/src/hooks/useSubject';
 import { Subject } from '@/src/services/subject';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
 
-const SubjectList = () => {
+const ArchivedSubjectList = () => {
   const {
-    subjects,
+    archivedSubjects,
     refreshSubjects,
     refreshArchivedSubjects,
     isLoading,
     subject,
     setSubject,
-    deleteSubject,
+    undeleteSubject,
     filter,
     setFilter,
   } = useSubject();
   const [modalOpen, setModalOpen] = useState(false);
-  const [willDelete, setWillDelete] = useState(false);
+  const [willUndelete, setWillUndelete] = useState(false);
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     refreshSubjects();
-    refreshArchivedSubjects();
   }, []);
 
   const handleButtonAction = (param: any) => {
@@ -44,10 +42,10 @@ const SubjectList = () => {
   };
 
   const handleOk = (p: Subject) => {
-    deleteSubject(p.id as string).then(() => {
+    undeleteSubject(p.id as string).then(() => {
       refreshSubjects();
       refreshArchivedSubjects();
-      showSnackbar('Subject archived!', 'success');
+      showSnackbar('Subject unarchived!', 'success');
     });
   };
 
@@ -63,21 +61,12 @@ const SubjectList = () => {
           <IconButton
             onClick={() => {
               handleButtonAction(param);
-            }}
-            aria-label="edit"
-            size="small"
-          >
-            <Edit />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              handleButtonAction(param);
-              setWillDelete(true);
+              setWillUndelete(true);
             }}
             aria-label="delete"
             size="small"
           >
-            <Archive />
+            <Unarchive />
           </IconButton>
         </>
       ),
@@ -86,24 +75,12 @@ const SubjectList = () => {
 
   return (
     <>
-      <div className="w-full flex gap-4 justify-end mb-4">
-        <Button
-          variant="contained"
-          onClick={() => {
-            setModalOpen(true);
-            setSubject(null);
-          }}
-        >
-          <Add />
-          Add Subject
-        </Button>
-      </div>
       <Box
         sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
       >
         <DataGrid
-          rows={subjects?.items ?? []}
-          rowCount={subjects?.totalSize ?? 0}
+          rows={archivedSubjects?.items ?? []}
+          rowCount={archivedSubjects?.totalSize ?? 0}
           columns={columns}
           loading={isLoading}
           initialState={{
@@ -146,40 +123,22 @@ const SubjectList = () => {
           autoHeight
         />
       </Box>
-      {willDelete ? (
-        <ConfirmationDialog
-          open={modalOpen && willDelete}
-          handleClose={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-          }}
-          handleOk={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-            handleOk(subject as Subject);
-          }}
-          title="Archive Subject"
-          message={`Are you sure you want to archive ${subject?.name}?`}
-        />
-      ) : (
-        <SimpleDialog
-          open={modalOpen}
-          handleClose={() => {
-            setModalOpen(false);
-          }}
-          title={`${subject ? 'Edit' : 'Add'} Subject`}
-          maxWidth="md"
-        >
-          <SubjectForm
-            data={subject as Subject}
-            onSubmitSuccess={() => {
-              setModalOpen(false);
-            }}
-          />
-        </SimpleDialog>
-      )}
+      <ConfirmationDialog
+        open={modalOpen && willUndelete}
+        handleClose={() => {
+          setModalOpen(false);
+          setWillUndelete(false);
+        }}
+        handleOk={() => {
+          setModalOpen(false);
+          setWillUndelete(false);
+          handleOk(subject as Subject);
+        }}
+        title="Unarchive Subject"
+        message={`Are you sure you want to unarchive ${subject?.name}?`}
+      />
     </>
   );
 };
 
-export default SubjectList;
+export default ArchivedSubjectList;

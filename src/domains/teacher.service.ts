@@ -5,8 +5,9 @@ import {
   UpdateTeacherRequest,
 } from '../pages/api/teachers/request';
 import { PaginationParam } from '../@types/pagination';
-import { ILike } from 'typeorm';
+import { FindOneOptions, ILike, IsNull, Not } from 'typeorm';
 import { SubjectRepository } from '../infrastructure/database/subject/subject.repository';
+import { TeacherEntity } from '../infrastructure/database/teacher/teacher.entity';
 
 export class TeacherService {
   public static readonly service: TeacherService = new TeacherService();
@@ -31,6 +32,29 @@ export class TeacherService {
       {
         where,
         relations: ['subject'],
+      }
+    );
+    return teachers;
+  }
+
+  async getArchivedTeachers(params: PaginationParam<string>) {
+    let where: FindOneOptions<TeacherEntity>['where'] = [
+      { deletedAt: Not(IsNull()) },
+    ];
+    if (params.search) {
+      where.push({ name: ILike(`%${params.search}%`) });
+      where.push({ email: ILike(`%${params.search}%`) });
+      where.push({ employeeId: params.search });
+    }
+    const teachers = await TeacherRepository.getRepository().getPaginated(
+      {
+        page: params.page,
+        size: params.size,
+      },
+      {
+        where,
+        relations: ['subject'],
+        withDeleted: true,
       }
     );
     return teachers;
@@ -83,5 +107,22 @@ export class TeacherService {
       id
     );
     return deletedTeacher;
+  }
+
+  async restoreTeacher(id: string) {
+    const restoredTeacher = await TeacherRepository.getRepository().restore(id);
+    return restoredTeacher;
+  }
+
+  async existanceCheck(body: Partial<CreateTeacherRequest>, property: string) {
+    const teacher = await TeacherRepository.getRepository().findOne({
+      where: [
+        { [property]: body[property as keyof Partial<CreateTeacherRequest>] },
+      ],
+    });
+    if (teacher) {
+      throw new ConflictException('Teacher already exists');
+    }
+    return { exists: false };
   }
 }

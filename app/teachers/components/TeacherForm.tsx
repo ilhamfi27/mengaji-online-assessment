@@ -19,7 +19,7 @@ import {
   TextField,
 } from '@mui/material';
 import { FC, useEffect } from 'react';
-import { FieldError, useForm } from 'react-hook-form';
+import { FieldError, set, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 type TeacherFormProps = {
@@ -46,10 +46,17 @@ const TeacherForm: FC<TeacherFormProps> = ({
   const {
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm({ resolver });
-  const { createTeacher, updateTeacher, setTeacher, teacher, refreshTeachers } =
-    useTeacher();
+  const {
+    createTeacher,
+    updateTeacher,
+    setTeacher,
+    teacher,
+    refreshTeachers,
+    checkTeacherProperty,
+  } = useTeacher();
   const { subjects, refreshSubjects, setFilter: subjectFilter } = useSubject();
 
   useEffect(() => {
@@ -66,6 +73,39 @@ const TeacherForm: FC<TeacherFormProps> = ({
     setValue('employeeId', teacher?.employeeId as string);
     setValue('gender', teacher?.gender as string);
     setValue('subject', teacher?.subject as Subject);
+
+    if (teacher?.email) {
+      checkTeacherProperty('email', { email: teacher.email })
+        .then(() => {
+          setError('email', {
+            type: 'manual',
+            message: '',
+          });
+        })
+        .catch((err) => {
+          setError('email', {
+            type: 'manual',
+            message: 'Email already exists',
+          });
+        });
+    }
+    if (teacher?.employeeId) {
+      checkTeacherProperty('employeeId', {
+        employeeId: teacher.employeeId,
+      })
+        .then(() => {
+          setError('employeeId', {
+            type: 'manual',
+            message: '',
+          });
+        })
+        .catch((err) => {
+          setError('employeeId', {
+            type: 'manual',
+            message: 'Employee ID already exists',
+          });
+        });
+    }
   }, [teacher]);
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -21,6 +22,20 @@ class ClassHandler {
     @Query('search') search: string
   ) {
     return ActiveClassService.getService().getActiveClasses({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
+  }
+
+  @Get('/archived/all')
+  @HttpCode(200)
+  archived(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return ActiveClassService.getService().getArchivedActiveClass({
       page: parseInt(page) || 1,
       size: parseInt(size) || 10,
       search,
@@ -49,6 +64,21 @@ class ClassHandler {
   @HttpCode(200)
   delete(@Param('id') id: string) {
     return ActiveClassService.getService().deleteActiveClass(id);
+  }
+
+  @Patch('/:id/restore')
+  @HttpCode(200)
+  restore(@Param('id') id: string) {
+    return ActiveClassService.getService().restoreActiveClass(id);
+  }
+
+  @Post('/:property/exists')
+  @HttpCode(200)
+  exists(
+    @Param('property') property: string,
+    @Body() body: Partial<CreateActiveClassRequest>
+  ) {
+    return ActiveClassService.getService().existanceCheck(body, property);
   }
 }
 

@@ -176,7 +176,6 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
             } as ActiveClass);
           }}
         >
-          <MenuItem value={''}>-- Select Teacher --</MenuItem>
           {teachers?.items?.map((teacher) => (
             <MenuItem
               key={teacher.id}
@@ -185,7 +184,7 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
                 !!activeClass?.teacher && activeClass?.teacher.id === teacher.id
               }
             >
-              {teacher.employeeId} - {teacher.name} ({teacher.subject.name})
+              {teacher.employeeId} - {teacher.name} ({teacher.subject?.name})
             </MenuItem>
           ))}
         </TextField>

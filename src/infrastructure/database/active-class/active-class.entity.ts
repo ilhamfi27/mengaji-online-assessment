@@ -34,6 +34,6 @@ export class ActiveClassEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', select: false })
+  @DeleteDateColumn({ type: 'timestamp', select: true })
   deletedAt?: Date;
 }

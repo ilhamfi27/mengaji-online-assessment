@@ -1,8 +1,7 @@
 'use client';
 
-import SimpleDialog from 'src/components/Dialog/SimpleDialog';
-import { Edit, Add, Archive } from '@mui/icons-material';
-import { IconButton, Box, Button } from '@mui/material';
+import { Unarchive } from '@mui/icons-material';
+import { IconButton, Box } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -11,27 +10,26 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import TeacherForm from './TeacherForm';
 import ConfirmationDialog from 'src/components/Dialog/ConfirmationDialog';
 import { useTeacher } from '@/src/hooks/useTeacher';
 import { Teacher } from '@/src/services/teacher';
 import { useSnackbar } from '@/src/hooks/useSnackbar';
 
-const TeacherList = () => {
+const ArchivedTeacherList = () => {
   const {
-    teachers,
-    refreshTeachers,
+    archivedTeachers,
     refreshArchivedTeachers,
+    refreshTeachers,
     isLoading,
     teacher,
     setTeacher,
     filter,
     setFilter,
-    deleteTeacher,
+    undeleteTeacher,
   } = useTeacher();
   const { showSnackbar } = useSnackbar();
   const [modalOpen, setModalOpen] = useState(false);
-  const [willDelete, setWillDelete] = useState(false);
+  const [willUnarchived, setWillUnarchive] = useState(false);
 
   useEffect(() => {
     refreshTeachers();
@@ -44,10 +42,10 @@ const TeacherList = () => {
   };
 
   const handleOk = (p: Teacher) => {
-    deleteTeacher(p.id as string).then(() => {
-      refreshTeachers();
+    undeleteTeacher(p.id as string).then(() => {
       refreshArchivedTeachers();
-      showSnackbar('Teacher archived!', 'success');
+      refreshTeachers();
+      showSnackbar('Teacher unarchived!', 'success');
     });
   };
 
@@ -70,21 +68,12 @@ const TeacherList = () => {
           <IconButton
             onClick={() => {
               handleButtonAction(param);
-            }}
-            aria-label="edit"
-            size="small"
-          >
-            <Edit />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              handleButtonAction(param);
-              setWillDelete(true);
+              setWillUnarchive(true);
             }}
             aria-label="delete"
             size="small"
           >
-            <Archive />
+            <Unarchive />
           </IconButton>
         </>
       ),
@@ -93,24 +82,12 @@ const TeacherList = () => {
 
   return (
     <>
-      <div className="w-full flex gap-4 justify-end mb-4">
-        <Button
-          variant="contained"
-          onClick={() => {
-            setModalOpen(true);
-            setTeacher(null);
-          }}
-        >
-          <Add />
-          Add Teacher
-        </Button>
-      </div>
       <Box
         sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
       >
         <DataGrid
-          rows={teachers?.items ?? []}
-          rowCount={teachers?.totalSize ?? 0}
+          rows={archivedTeachers?.items ?? []}
+          rowCount={archivedTeachers?.totalSize ?? 0}
           columns={columns}
           loading={isLoading}
           initialState={{
@@ -153,40 +130,23 @@ const TeacherList = () => {
           autoHeight
         />
       </Box>
-      {willDelete ? (
-        <ConfirmationDialog
-          open={modalOpen && willDelete}
-          handleClose={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-          }}
-          handleOk={() => {
-            setModalOpen(false);
-            setWillDelete(false);
-            handleOk(teacher as Teacher);
-          }}
-          title="Archive Teacher"
-          message={`Are you sure you want to archive ${teacher?.name} with employee ID ${teacher?.employeeId}?`}
-        />
-      ) : (
-        <SimpleDialog
-          open={modalOpen}
-          handleClose={() => {
-            setModalOpen(false);
-          }}
-          title={`${teacher ? 'Edit' : 'Add'} Teacher`}
-          maxWidth="md"
-        >
-          <TeacherForm
-            data={teacher as Teacher}
-            onSubmitSuccess={() => {
-              setModalOpen(false);
-            }}
-          />
-        </SimpleDialog>
-      )}
+
+      <ConfirmationDialog
+        open={modalOpen && willUnarchived}
+        handleClose={() => {
+          setModalOpen(false);
+          setWillUnarchive(false);
+        }}
+        handleOk={() => {
+          setModalOpen(false);
+          setWillUnarchive(false);
+          handleOk(teacher as Teacher);
+        }}
+        title="Unarchive Teacher"
+        message={`Are you sure you want to unarchive ${teacher?.name} with employee ID ${teacher?.employeeId}?`}
+      />
     </>
   );
 };
 
-export default TeacherList;
+export default ArchivedTeacherList;

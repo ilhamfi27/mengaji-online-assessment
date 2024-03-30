@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import TeacherList from "./components/TeacherList";
+import ArchivedTeacherList from "./components/TeacherArchivedList";
 
 const Teachers = () => {
   return (
@@ -8,6 +9,11 @@ const Teachers = () => {
         Teachers
       </Typography>
       <TeacherList />
+
+      <Typography variant="h5" data-testid="product-text">
+        Archived Teachers
+      </Typography>
+      <ArchivedTeacherList />
     </Box>
   );
 };

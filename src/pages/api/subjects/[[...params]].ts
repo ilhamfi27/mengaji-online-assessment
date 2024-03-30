@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -33,6 +34,20 @@ class SubjectHandler {
     });
   }
 
+  @Get('/archived/all')
+  @HttpCode(200)
+  archived(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return SubjectService.getService().getArchivedSubjects({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
+  }
+
   @Post()
   @HttpCode(200)
   create(@Body() body: CreateSubjectRequest) {
@@ -49,6 +64,21 @@ class SubjectHandler {
   @HttpCode(200)
   delete(@Param('id') id: string) {
     return SubjectService.getService().deleteSubject(id);
+  }
+
+  @Patch('/:id/restore')
+  @HttpCode(200)
+  restore(@Param('id') id: string) {
+    return SubjectService.getService().restoreSubject(id);
+  }
+
+  @Post('/:property/exists')
+  @HttpCode(200)
+  exists(
+    @Param('property') property: string,
+    @Body() body: Partial<CreateSubjectRequest>
+  ) {
+    return SubjectService.getService().existanceCheck(body, property);
   }
 }
 

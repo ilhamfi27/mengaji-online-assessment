@@ -10,10 +10,10 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import InventoryIcon from '@mui/icons-material/Inventory';
+import SubjectIcon from '@mui/icons-material/LibraryBooks';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HomeIcon from '@mui/icons-material/Home';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import DiscountIcon from '@mui/icons-material/Discount';
 import { FC, PropsWithChildren, useContext, useState } from 'react';
 import SidebarItem from '@/src/components/ListItem/SidebarItem';
@@ -187,11 +187,11 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         <Divider />
         <List>
           <>
-            <Link href={'/teachers'}>
-              <SidebarItem text="Teachers" icon={<HomeIcon />} />
-            </Link>
             <Link href={'/subjects'}>
-              <SidebarItem text="Subjects" icon={<InventoryIcon />} />
+              <SidebarItem text="Subjects" icon={<SubjectIcon />} />
+            </Link>
+            <Link href={'/teachers'}>
+              <SidebarItem text="Teachers" icon={<SupervisorAccountIcon />} />
             </Link>
             <Link href={'/classes'}>
               <SidebarItem text="Classes" icon={<DiscountIcon />} />

@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -18,6 +19,7 @@ class TeacherHandler {
   show(@Param('id') id: string) {
     return TeacherService.getService().getTeacherById(id);
   }
+
   @Get()
   @HttpCode(200)
   index(
@@ -26,6 +28,20 @@ class TeacherHandler {
     @Query('search') search: string
   ) {
     return TeacherService.getService().getTeachers({
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      search,
+    });
+  }
+
+  @Get('/archived/all')
+  @HttpCode(200)
+  archived(
+    @Query('page') page: string,
+    @Query('size') size: string,
+    @Query('search') search: string
+  ) {
+    return TeacherService.getService().getArchivedTeachers({
       page: parseInt(page) || 1,
       size: parseInt(size) || 10,
       search,
@@ -48,6 +64,21 @@ class TeacherHandler {
   @HttpCode(200)
   delete(@Param('id') id: string) {
     return TeacherService.getService().deleteTeacher(id);
+  }
+
+  @Patch('/:id/restore')
+  @HttpCode(200)
+  restore(@Param('id') id: string) {
+    return TeacherService.getService().restoreTeacher(id);
+  }
+
+  @Post('/:property/exists')
+  @HttpCode(200)
+  exists(
+    @Param('property') property: string,
+    @Body() body: Partial<CreateTeacherRequest>
+  ) {
+    return TeacherService.getService().existanceCheck(body, property);
   }
 }
 

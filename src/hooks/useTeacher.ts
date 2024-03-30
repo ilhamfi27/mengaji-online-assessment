@@ -4,7 +4,10 @@ import {
   createTeacher,
   updateTeacher,
   deleteTeacher,
+  undeleteTeacher,
   Teacher,
+  getArchivedTeachers,
+  checkTeacherProperty,
 } from '../services/teacher';
 import { useEffect, useState } from 'react';
 import { PaginationParam } from '../@types/pagination';
@@ -34,6 +37,20 @@ export const useTeacher = () => {
     setIsFetching(isValidating);
   }, [fetchError, fetchLoading, isValidating]);
 
+  const {
+    data: archivedTeachers,
+    error: fetchArchivedError,
+    isLoading: fetchArchivedLoading,
+    mutate: refreshArchivedTeachers,
+    isValidating: isArchivedValidating,
+  } = useSWR(['/teachers/archived', filter], () => getArchivedTeachers(filter));
+
+  useEffect(() => {
+    setIsLoading(fetchArchivedLoading);
+    setError(fetchArchivedError);
+    setIsFetching(isArchivedValidating);
+  }, [fetchArchivedError, fetchArchivedLoading, isArchivedValidating]);
+
   return {
     teachers,
     error,
@@ -43,9 +60,13 @@ export const useTeacher = () => {
     createTeacher,
     updateTeacher,
     deleteTeacher,
+    undeleteTeacher,
+    checkTeacherProperty,
     teacher: data,
     setTeacher: setData,
     filter,
     setFilter,
+    archivedTeachers,
+    refreshArchivedTeachers,
   };
 };

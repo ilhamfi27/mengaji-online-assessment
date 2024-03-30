@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import ActiveClassList from './components/ActiveClassList';
+import ArchivedActiveClassList from './components/ActiveClassArchivedList';
 
 const Classes = () => {
   return (
@@ -8,6 +9,10 @@ const Classes = () => {
         Classes
       </Typography>
       <ActiveClassList />
+      <Typography variant="h5" data-testid="product-text">
+        Archived Classes
+      </Typography>
+      <ArchivedActiveClassList />
     </Box>
   );
 };
