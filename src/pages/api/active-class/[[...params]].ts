@@ -6,11 +6,24 @@ import {
   Get,
   HttpCode,
   Param,
+  Post,
   Put,
 } from 'next-api-decorators';
-import { UpdateActiveClassRequest } from './request';
+import { CreateActiveClassRequest, UpdateActiveClassRequest } from './request';
 
-class DetailActiveClassHandler {
+class ClassHandler {
+  @Get()
+  @HttpCode(201)
+  index() {
+    return ActiveClassService.getService().getActiveClasses();
+  }
+
+  @Post()
+  @HttpCode(200)
+  create(@Body() body: CreateActiveClassRequest) {
+    return ActiveClassService.getService().createActiveClass(body);
+  }
+
   @Get('/:id')
   @HttpCode(200)
   show(@Param('id') id: string) {
@@ -30,4 +43,4 @@ class DetailActiveClassHandler {
   }
 }
 
-export default createHandler(DetailActiveClassHandler);
+export default createHandler(ClassHandler);

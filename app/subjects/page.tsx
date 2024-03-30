@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import TeacherList from "./components/SubjectList";
+import SubjectList from "./components/SubjectList";
 
 const Subjects = () => {
   return (
@@ -7,7 +7,7 @@ const Subjects = () => {
       <Typography variant="h5" data-testid="product-text">
         Subjects
       </Typography>
-      <TeacherList />
+      <SubjectList />
     </Box>
   );
 };
