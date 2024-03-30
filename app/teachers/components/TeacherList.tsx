@@ -147,6 +147,7 @@ const TeacherList = () => {
             const [value] = filterModel.quickFilterValues ?? [];
             setFilter({ ...filter, search: value });
           }}
+          autoHeight
         />
       </Box>
       {willDelete ? (

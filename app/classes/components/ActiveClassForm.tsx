@@ -6,11 +6,12 @@ import { ActiveClass } from '@/src/services/active-class';
 import useYupValidationResolver from '@/src/utils/form';
 import { Box, Button, MenuItem, TextField } from '@mui/material';
 import { FC, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldError, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { Teacher } from '@/src/services/teacher';
 import DateTimePicker from '@/src/components/DateTimePicker';
 import { useTeacher } from '@/src/hooks/useTeacher';
+import FormError from '@/src/components/Error/FormError';
 
 type ActiveClassFormProps = {
   data?: ActiveClass;
@@ -22,7 +23,7 @@ let activeClassSchema = yup.object({
   name: yup.string().required(),
   dateAndTime: yup.date().required(),
   duration: yup.number().required(),
-  teacher: yup.object().required(),
+  teacher: yup.object(),
 });
 
 const ActiveClassForm: FC<ActiveClassFormProps> = ({
@@ -133,6 +134,7 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
           error={!!errors.name}
           {...formRegister('name')}
         />
+        <FormError errorMessage={errors.name as FieldError} />
         <DateTimePicker
           className="w-full !mt-2"
           label="Date and Time"
@@ -143,6 +145,7 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
             } as ActiveClass);
           }}
         />
+        <FormError errorMessage={errors.dateAndTime as FieldError} />
         <TextField
           margin="normal"
           fullWidth
@@ -153,9 +156,9 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
           error={!!errors.duration}
           {...formRegister('duration')}
         />
+        <FormError errorMessage={errors.duration as FieldError} />
         <TextField
           margin="normal"
-          required
           fullWidth
           id="teacher"
           label="Teacher"
@@ -173,6 +176,7 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
             } as ActiveClass);
           }}
         >
+          <MenuItem value={''}>-- Select Teacher --</MenuItem>
           {teachers?.items?.map((teacher) => (
             <MenuItem
               key={teacher.id}

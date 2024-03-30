@@ -7,7 +7,7 @@ import { Subject } from '@/src/services/subject';
 import useYupValidationResolver from '@/src/utils/form';
 import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldError, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 type SubjectFormProps = {
@@ -109,6 +109,7 @@ const SubjectForm: FC<SubjectFormProps> = ({
           error={!!errors.name}
           {...formRegister('code')}
         />
+        <FormError errorMessage={errors.code as FieldError} />
         <TextField
           margin="normal"
           fullWidth
@@ -119,6 +120,7 @@ const SubjectForm: FC<SubjectFormProps> = ({
           error={!!errors.name}
           {...formRegister('name')}
         />
+        <FormError errorMessage={errors.name as FieldError} />
         <div className="flex w-full justify-center">
           <Button type="submit" fullWidth>
             Save

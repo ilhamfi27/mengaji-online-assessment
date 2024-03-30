@@ -43,14 +43,11 @@ export class ActiveClassService {
     const teacher = await TeacherRepository.getRepository().findOne({
       where: { id: activeClass.teacher?.id },
     });
-    if (!teacher) {
-      throw new NotFoundException('Teacher not found');
-    }
     const newActiveClass = await ActiveClassRepository.getRepository().save({
       name: activeClass.name,
       duration: activeClass.duration,
       dateAndTime: activeClass.dateAndTime,
-      teacher: teacher,
+      teacher: activeClass.teacher && teacher ? teacher : undefined,
     });
     return newActiveClass;
   }

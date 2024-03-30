@@ -54,13 +54,13 @@ const ActiveClassList = () => {
       field: 'teacher.name',
       headerName: 'Teacher',
       width: 200,
-      renderCell: (param) => param.row.teacher.name,
+      renderCell: (param) => param.row.teacher?.name,
     },
     {
       field: 'subject.name',
       headerName: 'Subject',
       width: 200,
-      renderCell: (param) => param.row.teacher.subject.name,
+      renderCell: (param) => param.row.teacher?.subject?.name,
     },
     { field: 'duration', headerName: 'Duration', width: 200 },
     {
@@ -158,6 +158,7 @@ const ActiveClassList = () => {
             const [value] = filterModel.quickFilterValues ?? [];
             setFilter({ ...filter, search: value });
           }}
+          autoHeight
         />
       </Box>
       {willDelete ? (
