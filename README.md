@@ -1,6 +1,11 @@
 # Coding Assessment
 
-This project using NextJS built using monorepo architecture
+This project using NextJS built using monorepo architecture. I use DDD (domain driven design) for software design. The project is divided to several layer.
+
+- Presentation layer will handle the user interface: `app` folder
+- Application layer will handle the REST requests and response: `src/pages/api` folder
+- Domain layer will handle the application logic: `src/domains` folder
+- Infrastructure layer will handle the connection to external services: `src/infrastructure` folder
 
 ## Prerequisite
 
@@ -16,7 +21,8 @@ This project using NextJS built using monorepo architecture
    ```
 
    Make sure all service has running
-   ![plot](./assets/running-docker-dev.png)
+
+![Running Docker Services](assets/running-docker-dev.png)
 
 2. start the application
 
@@ -100,6 +106,20 @@ This project using NextJS built using monorepo architecture
    docker compose -f docker-compose.production.yml up -d
    ```
 
+## Backend Guide
+
+### Tech Stack
+
+- Database: PostrgreSQL
+- ORM: TypeORM
+
+### Create Migration File
+
+1. Add entity inside `src/infrastructure/database` folder
+2. Add the entity to `src/infrastructure/database/provider/typeorm.config.ts` file
+3. Run `NAME=<name of the migration> yarn typeorm:generate`. The generated migration file will be inside of `src/infrastructure/database/provider/migrations` folder.
+4. RUN `yarn typeorm:run`
+
 ## Default User Auth
 
 ### Admin
@@ -115,11 +135,13 @@ You can review the deployed version application on: https://mengaji-online-asses
 
 # Screenshots
 
-![plot](./assets/signin.png)
-![plot](./assets/signup.png)
-![plot](./assets/dashboard.png)
-![plot](./assets/products.png)
-![plot](./assets/discount-rules.png)
-![plot](./assets/buyer-view.png)
-![plot](./assets/cart-view.png)
-![plot](./assets/checkout.png)
+![Sign In Page](assets/signin.png)
+![Dashboard](assets/dashboard.png)
+![Subject list](assets/subjects.png)
+![Add Subject Form](assets/add-subject.png)
+![Subject Form With Error Messages](assets/subject-form-error-message.png)
+![Teacher List](assets/teachers.png)
+![Add Teacher Form](assets/add-teacher.png)
+![Teacher Form With Error Messages](assets/teacher-form-error-message.png)
+![Class List](assets/classes.png)
+![Add Class Form](assets/add-classes.png)
