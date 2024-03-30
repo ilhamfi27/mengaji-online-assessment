@@ -23,7 +23,7 @@ jobs:
           node-version: 18
 
       - name: install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Deploy migrations
         run: yarn typeorm:run

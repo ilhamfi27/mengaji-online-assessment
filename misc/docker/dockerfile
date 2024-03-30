@@ -13,8 +13,6 @@ RUN yarn build
 FROM node:18.18.0-alpine as final
 WORKDIR /src/app
 
-ENV NODE_ENV=production
-
 RUN apk update && \
     apk add --no-cache bash
 
@@ -22,6 +20,7 @@ RUN yarn --freeze-lockfile
 
 COPY --from=builder /src/app/. .
 
+ENV NODE_ENV=production
 EXPOSE 3000
 
 CMD ["yarn", "start"]
