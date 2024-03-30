@@ -119,8 +119,6 @@ const ActiveClassForm: FC<ActiveClassFormProps> = ({
     >
       <form
         onSubmit={handleSubmit((d) => {
-          console.log();
-
           formSubmitHandler(d as ActiveClass);
         })}
       >

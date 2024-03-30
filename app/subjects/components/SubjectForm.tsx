@@ -133,8 +133,6 @@ const SubjectForm: FC<SubjectFormProps> = ({
     >
       <form
         onSubmit={handleSubmit((d) => {
-          console.log();
-
           formSubmitHandler(d as Subject);
         })}
       >
